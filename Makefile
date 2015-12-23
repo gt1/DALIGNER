@@ -1,11 +1,11 @@
-CFLAGS = -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing
+CFLAGS = -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing # -DUSE_PRS
 
 ALL = daligner HPCdaligner HPCmapper LAsort LAmerge LAsplit LAcat LAshow LAdump LAcheck LAindex
 
 all: $(ALL)
 
-daligner: daligner.c filter.c filter.h align.c align.h DB.c DB.h QV.c QV.h
-	gcc $(CFLAGS) -o daligner daligner.c filter.c align.c DB.c QV.c -lpthread -lm
+daligner: daligner.c filter.c filter.h align.c align.h DB.c DB.h QV.c QV.h prs.ic  prs.ih  prs_uint64_t_pair.c  prs_uint64_t_pair.h
+	gcc $(CFLAGS) -o daligner daligner.c filter.c align.c DB.c QV.c prs_uint64_t_pair.c -lpthread -lm
 
 HPCdaligner: HPCdaligner.c DB.c DB.h QV.c QV.h
 	gcc $(CFLAGS) -o HPCdaligner HPCdaligner.c DB.c QV.c -lm

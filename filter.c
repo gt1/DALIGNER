@@ -27,6 +27,10 @@
 #include "filter.h"
 #include "align.h"
 
+#if defined(USE_PRS)
+#include "prs_uint64_t_pair.h"
+#endif
+
 #define THREAD    pthread_t
 
 #define MAX_BIAS  2    //  In -b mode, don't consider tuples with specificity
@@ -731,7 +735,22 @@ void *Sort_Kmers(HITS_DB *block, int *len)
       parmx[i].end = x = block->reads[j].boff - j*Kmer;
     }
 
+  #if defined(USE_PRS)
+  if ( radixsort_densekey_uint64_t_pair(
+    (uint64_t_pair **)&rez,
+    (uint64_t_pair *)src,
+    (uint64_t_pair *)trg,
+    kmers /* n */,
+    NTHREADS,
+    sizeof(mersort)/sizeof(mersort[0]),
+    &mersort[0],
+    1 /* interleave */
+  ) != 0 )
+    exit(1);
+  #else
   rez = (KmerPos *) lex_sort(mersort,(Double *) src,(Double *) trg,parmx);
+  #endif
+
   if (BIASED || TA_track != NULL)
     for (i = 0; i < NTHREADS; i++)
       kmers -= parmt[i].fill;
@@ -2048,7 +2067,21 @@ void Match_Filter(char *aname, HITS_DB *ablock, char *bname, HITS_DB *bblock,
     parmx[NTHREADS-1].beg = x;
     parmx[NTHREADS-1].end = nhits;
 
+    #if defined(USE_PRS)
+    if ( radixsort_densekey_uint64_t_pair(
+      (uint64_t_pair **)&khit,
+      (uint64_t_pair *)khit,
+      (uint64_t_pair *)hhit,
+      nhits /* n */,
+      NTHREADS,
+      sizeof(pairsort)/sizeof(pairsort[0]),
+      &pairsort[0],
+      1 /* interleave */
+    ) != 0 )
+      exit(1);
+    #else
     khit = (SeedPair *) lex_sort(pairsort,(Double *) khit,(Double *) hhit,parmx);
+    #endif
 
     khit[nhits].aread = 0x7fffffff;
     khit[nhits].bread = 0x7fffffff;
