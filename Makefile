@@ -1,17 +1,17 @@
 CFLAGS = -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing # -DUSE_PRS
 
-ALL = daligner HPCdaligner HPCmapper LAsort LAmerge LAsplit LAcat LAshow LAdump LAcheck LAindex
+ALL = daligner HPC.daligner HPC.mapper LAsort LAmerge LAsplit LAcat LAshow LAdump LAcheck LAindex
 
 all: $(ALL)
 
 daligner: daligner.c filter.c filter.h align.c align.h DB.c DB.h QV.c QV.h prs.ic  prs.ih  prs_uint64_t_pair.c  prs_uint64_t_pair.h
 	gcc $(CFLAGS) -o daligner daligner.c filter.c align.c DB.c QV.c prs_uint64_t_pair.c -lpthread -lm
 
-HPCdaligner: HPCdaligner.c DB.c DB.h QV.c QV.h
-	gcc $(CFLAGS) -o HPCdaligner HPCdaligner.c DB.c QV.c -lm
+HPC.daligner: HPC.daligner.c DB.c DB.h QV.c QV.h
+	gcc $(CFLAGS) -o HPC.daligner HPC.daligner.c DB.c QV.c -lm
 
-HPCmapper: HPCmapper.c DB.c DB.h QV.c QV.h
-	gcc $(CFLAGS) -o HPCmapper HPCmapper.c DB.c QV.c -lm
+HPC.mapper: HPC.mapper.c DB.c DB.h QV.c QV.h
+	gcc $(CFLAGS) -o HPC.mapper HPC.mapper.c DB.c QV.c -lm
 
 LAsort: LAsort.c align.h DB.c DB.h QV.c QV.h
 	gcc $(CFLAGS) -o LAsort LAsort.c DB.c QV.c -lm
