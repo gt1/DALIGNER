@@ -1,4 +1,5 @@
 CFLAGS = -O3 -Wall -Wextra -Wno-unused-result -fno-strict-aliasing # -DUSE_PRS
+DEST_DIR = ~/bin
 
 ALL = daligner HPC.daligner LAsort LAmerge LAsplit LAcat LAshow LAdump LAcheck LAindex
 
@@ -51,7 +52,7 @@ clean:
 	rm -f ${LIBRARY_OBJECTS} ${LIBRARY_SHAREDOBJECTS} libalign.a libalign${SHARED_LIBRARY_SUFFIX}
 
 install:
-	cp $(ALL) ~/bin
+	cp $(ALL) $(DEST_DIR)
 
 package:
 	make clean
