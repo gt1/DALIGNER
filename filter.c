@@ -31,6 +31,8 @@
 #include "prs_uint64_t_pair.h"
 #endif
 
+#undef FOR_PACBIO
+
 #define THREAD    pthread_t
 
 #define MAX_BIAS  2    //  In -b mode, don't consider tuples with specificity
@@ -1737,9 +1739,14 @@ static void *report_thread(void *arg)
                         align->blen = blen;
                         ovlb->bread = ovla->aread = ar + afirst;
                         ovlb->aread = ovla->bread = br + bfirst;
+#ifdef FOR_PACBIO
+                        doA = 1;
+                        doB = (SYMMETRIC && (ar != br || !MG_self || !MG_comp));
+#else
                         doA = (alen >= HGAP_MIN);
                         doB = (SYMMETRIC && blen >= HGAP_MIN &&
                                    (ar != br || !MG_self || !MG_comp));
+#endif
                       }
 #ifdef TEST_GATHER
                     else
